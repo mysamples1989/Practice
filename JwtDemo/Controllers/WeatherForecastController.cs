@@ -39,17 +39,17 @@ namespace JwtDemo.Controllers
                 }
 
                 [HttpPost("login")]
-                public async Task<ActionResult<bool>> Login(string username, string password)
+                public async Task<ActionResult<bool>> Login([FromBody] LoginModel loginModel)
                 {
-                        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                        if (string.IsNullOrEmpty(loginModel.Username) || string.IsNullOrEmpty(loginModel.Password))
                         {
                                 return BadRequest();
                         }
-                        if (!username.Equals("admin") && !password.Equals("admin"))
+                        if (!loginModel.Username.Equals("admin") && !loginModel.Password.Equals("admin"))
                         {
                                 return Unauthorized("Invalid username/password");
                         }
-                        string token = CreateToken(username);
+                        string token = CreateToken(loginModel.Username);
                         return Ok(token);
                 }
 
@@ -75,4 +75,10 @@ namespace JwtDemo.Controllers
                         return jwt;
                 }
         }
+
+        public class LoginModel
+        {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }
